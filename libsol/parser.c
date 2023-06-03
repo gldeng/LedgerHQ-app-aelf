@@ -14,6 +14,22 @@ static void advance(Parser* parser, size_t num) {
     parser->buffer_length -= num;
 }
 
+int parse_varint(Parser* parser, uint64_t* output) {
+    size_t i;
+    uint64_t result = 0;
+    for (i = 0; i < 10; ++i) {
+        uint64_t byte_val = parser->buffer[i];
+        result |= (byte_val & 0x7F) << (7 * i);
+        // If the next-byte flag is set to zero, then we're done
+        if ((byte_val & 0x80) == 0) {
+            break;
+        }
+    }
+    *output = result;
+    // return the number of bytes read
+    return 0;
+}
+
 int parse_u8(Parser* parser, uint8_t* value) {
     BAIL_IF(check_buffer_length(parser, 1));
     *value = *parser->buffer;
@@ -88,6 +104,16 @@ int parse_sized_string(Parser* parser, SizedString* string) {
     BAIL_IF(check_buffer_length(parser, len));
     string->string = (const char*) parser->buffer;
     advance(parser, len);
+    return 0;
+}
+
+int assert_bytes(Parser* parser, const char* bytes, int size) {
+    for(int i = 0; i < size; i++) {
+        if(parser->buffer[i] != bytes[i]) {
+            return 1;
+        }
+    }
+    advance(parser, size);
     return 0;
 }
 
