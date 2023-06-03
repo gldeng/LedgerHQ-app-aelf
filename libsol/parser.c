@@ -26,7 +26,7 @@ int parse_varint(Parser* parser, uint64_t* output) {
         }
     }
     *output = result;
-    // return the number of bytes read
+    advance(parser, i+1);
     return 0;
 }
 
