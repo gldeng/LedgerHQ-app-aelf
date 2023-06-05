@@ -34,5 +34,3 @@ int parse_system_get_tx_result_instruction(Parser* parser,
                                            SystemGetTxResultInfo* info);
 
 int print_system_transfer_info(const SystemTransferInfo* info);
-
-int print_system_get_tx_result_info(const SystemGetTxResultInfo* info);
