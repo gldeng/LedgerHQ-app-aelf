@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 
 '''Generate header file for nanopb from a ProtoBuf FileDescriptorSet.'''
-nanopb_version = "nanopb-0.4.7"
+nanopb_version = "nanopb-0.4.8-dev"
 
 import sys
 import re
@@ -2499,7 +2499,7 @@ def main_cli():
             if dirname and not os.path.exists(dirname):
                 os.makedirs(dirname)
 
-            with open(path, 'w') as f:
+            with open(path, 'w', encoding='utf-8') as f:
                 f.write(data)
 
 def main_plugin():

@@ -17,7 +17,7 @@ endif
 
 # Check whether to use binary version of nanopb_generator or the
 # system-supplied python interpreter.
-ifneq "$(wildcard $(NANOPB_DIR)/generator-bin-2)" ""
+ifneq "$(wildcard $(NANOPB_DIR)/generator-bin)" ""
 	# Binary package
 	PROTOC = $(NANOPB_DIR)/generator-bin/protoc
 	PROTOC_OPTS =

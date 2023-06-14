@@ -1,9 +1,66 @@
 #include "sol/parser.h"
 #include "util.h"
+#include <pb.h>
+#include <pb_decode.h>
+#include "proto/message.pb.h"
 
 #define OFFCHAIN_MESSAGE_SIGNING_DOMAIN \
     "\xff"                              \
     "aelf offchain"
+
+
+void init_canary() {
+    STACK_CANARY = 0xDEADBEEF;
+}
+
+void check_canary() {
+    if (STACK_CANARY != 0xDEADBEEF)
+        PRINTF("EXCEPTION_OVERFLOW\n");
+    else
+        PRINTF("NO OVERFLOW\n");
+}
+
+void tohex(unsigned char * in, size_t insz, char * out, size_t outsz)
+{
+    unsigned char * pin = in;
+    const char * hex = "0123456789ABCDEF";
+    char * pout = out;
+    for(; pin < in+insz; pout +=2, pin++){
+        pout[0] = hex[(*pin>>4) & 0xF];
+        pout[1] = hex[ *pin     & 0xF];
+        if (pout + 2 - out > outsz){
+            /* Better to truncate output string than overflow buffer */
+            /* it would be still better to either return a status */
+            /* or ensure the target buffer is large enough and it never happen */
+            break;
+        }
+    }
+    pout[-1] = 0;
+}
+
+bool read_address_field(pb_istream_t *stream, const pb_field_iter_t *field, void **arg)
+{
+    pb_byte_t* buffer = *arg;
+    pb_byte_t binBuffer[BUFFER_SIZE] = {0};
+    size_t binToRead = stream->bytes_left;
+    bool status = pb_read(stream, binBuffer, binToRead);
+    if (!status)
+        return status;
+    tohex(binBuffer, binToRead, (char*) buffer, 2*binToRead);
+    return true;
+}
+
+bool read_string_field(pb_istream_t *stream, const pb_field_iter_t *field, void **arg)
+{
+    pb_byte_t* buffer = *arg;
+    return pb_read(stream, buffer, stream->bytes_left);
+}
+
+bool read_transfer_input(pb_istream_t *stream, const pb_field_iter_t *field, void **arg)
+{
+    bool status = pb_decode(stream, aelf_TransferInput_fields, *arg);
+    return status;
+}
 
 static int check_buffer_length(Parser* parser, size_t num) {
     return parser->buffer_length < num ? 1 : 0;

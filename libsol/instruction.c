@@ -6,33 +6,54 @@
 #include <pb_decode.h>
 #include "proto/message.pb.h"
 
+
+
 int parse_system_transfer_instruction(Parser* parser,
                                       Instruction* instruction,
                                       SystemTransferInfo* info) {
     // BAIL_IF(parse_pubkey(parser, &info->to));
     // BAIL_IF(parse_data(parser, &instruction->ticker, &instruction->ticker_length));
     // BAIL_IF(parse_u64(parser, &info->amount));
+    
     PRINTF("GUI PARSER:\n%.*H\n", parser->buffer_length, parser->buffer);
 
-    /* Allocate space for the decoded message. */
-    aelf_Transaction message = aelf_Transaction_init_zero;
-    
-    /* Create a stream that reads from the buffer. */
-    pb_istream_t stream = pb_istream_from_buffer(parser->buffer, parser->buffer_length);
-    
-    /* Now we are ready to decode the message. */
-    uint8_t status = pb_decode(&stream, aelf_Transaction_fields, &message);
-    
-    /* Check for errors... */
-    if (!status)
+    init_canary();
+    check_canary();
+
+    aelf_TransferInput transfer_input = aelf_TransferInput_init_zero;
+    check_canary();
+    pb_byte_t symbolBuffer[BUFFER_SIZE] = {0};
+    pb_byte_t memoBuffer[BUFFER_SIZE] = {0};
+    pb_byte_t addressBuffer[BUFFER_SIZE] = {0};
+    check_canary();
+
+    transfer_input.symbol.funcs.decode = read_string_field;
+    transfer_input.memo.funcs.decode = read_string_field;
+    transfer_input.to.value.funcs.decode = read_address_field;
+    transfer_input.symbol.arg = &symbolBuffer;
+    transfer_input.memo.arg = &memoBuffer;
+    transfer_input.to.value.arg = &addressBuffer;
+    check_canary();
+
+    aelf_Transaction txn = aelf_Transaction_init_zero;
+
+    txn.params.funcs.decode = read_transfer_input;
+    txn.params.arg = &transfer_input;
+
+    pb_istream_t stream = pb_istream_from_buffer((const pb_byte_t *)parser->buffer, (size_t)parser->buffer_length);
+    check_canary();
+
+    if (!pb_decode(&stream, aelf_Transaction_fields, &txn))
     {
-        printf("Decoding failed: %s\n", PB_GET_ERROR(&stream));
+        PRINTF("Decoding failed: %s\n", PB_GET_ERROR(&stream));
         return 1;
     }
-    
-    /* Print the data contained in the message. */
-    printf("Your ref block number was %d!\n", (int)message.ref_block_number);
-    
+
+    PRINTF("Address   : %s\n", addressBuffer);
+    PRINTF("Symbol    : %s\n", symbolBuffer);
+    PRINTF("Amount    : %ld\n", transfer_input.amount);
+    PRINTF("Memo      : %s\n", memoBuffer);
+
     return 0;
 }
 

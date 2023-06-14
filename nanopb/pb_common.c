@@ -14,6 +14,12 @@ static bool load_descriptor_values(pb_field_iter_t *iter)
     if (iter->index >= iter->descriptor->field_count)
         return false;
 
+    check_canary();
+    PRINTF("word0:\n");
+    PRINTF("GUI FIELD INDEX: %u\n", iter->field_info_index);
+    PRINTF("GUI SIZE OF FIELD: %u\n", sizeof(iter->descriptor->field_info));
+    PRINTF("GUI FIELD: %u\n", iter->descriptor->field_info[iter->field_info_index]);
+    check_canary();
     word0 = PB_PROGMEM_READU32(iter->descriptor->field_info[iter->field_info_index]);
     iter->type = (pb_type_t)((word0 >> 8) & 0xFF);
 
@@ -159,6 +165,10 @@ bool pb_field_iter_begin(pb_field_iter_t *iter, const pb_msgdesc_t *desc, void *
 
     iter->descriptor = desc;
     iter->message = message;
+
+    // PRINTF("DESC FIELD COUNT: %u\n", desc->field_count);
+    // PRINTF("DESC REQUIRED FIELFD COUNT: %u\n", desc->required_field_count);
+    // PRINTF("DESC LARGEST TAG: %u\n", desc->largest_tag);
 
     return load_descriptor_values(iter);
 }
