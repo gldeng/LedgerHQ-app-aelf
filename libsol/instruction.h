@@ -6,7 +6,14 @@
 typedef struct SystemTransferInfo {
     const Pubkey* from;
     const Pubkey* to;
+    uint64_t ref_block_number;
+    uint8_t* ref_block_prefix;
+    uint8_t* method_name;
+    const Pubkey* dest;
+    uint8_t* ticker;
     uint64_t amount;
+    uint8_t* memo;
+    uint8_t* signature;
 } SystemTransferInfo;
 
 typedef struct SystemGetTxResultInfo {

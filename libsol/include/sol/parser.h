@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
-#include <pb.h>
+#include "../../../proto/pb.h"
 
 #define PUBKEY_SIZE    32
 #define HASH_SIZE      32
@@ -67,11 +67,11 @@ void check_canary();
 
 void tohex(unsigned char * in, size_t insz, char * out, size_t outsz);
 
-bool read_address_field(pb_istream_t *stream, const pb_field_iter_t *field, void **arg);
+bool read_address_field(pb_istream_t *stream, const pb_field_t *field, void **arg);
 
-bool read_string_field(pb_istream_t *stream, const pb_field_iter_t *field, void **arg);
+bool read_string_field(pb_istream_t *stream, const pb_field_t *field, void **arg);
 
-bool read_transfer_input(pb_istream_t *stream, const pb_field_iter_t *field, void **arg);
+bool read_transfer_input(pb_istream_t *stream, const pb_field_t *field, void **arg);
 
 int parse_u8(Parser* parser, uint8_t* value);
 

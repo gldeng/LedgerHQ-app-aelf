@@ -111,7 +111,7 @@ $(info GCCPATH is not set: arm-none-eabi-* will be used from PATH)
 endif
 
 CC      := $(CLANGPATH)clang
-CFLAGS  += -O3 -Os -I. -Iproto
+CFLAGS  += -O3 -Os -I. -Iproto -ggdb
 AS      := $(GCCPATH)arm-none-eabi-gcc
 LD      := $(GCCPATH)arm-none-eabi-gcc
 LDFLAGS += -O3 -Os
@@ -141,25 +141,6 @@ ifneq ($(WITH_LIBSOL),0)
     DEFINES      += NDEBUG
 endif
 
-include nanopb/extra/nanopb.mk
-
-DEFINES   += PB_NO_ERRMSG=1
-SOURCE_FILES += $(NANOPB_CORE)
-CFLAGS += "-I$(NANOPB_DIR)"
-
-PB_FILES = $(wildcard proto/*.proto)
-C_PB_FILES = $(patsubst %.proto,%.pb.c,$(PB_FILES))
-
-# Build rule for C proto files
-SOURCE_FILES += $(C_PB_FILES)
-$(C_PB_FILES): %.pb.c: $(PB_FILES)
-	$(PROTOC) $(PROTOC_OPTS) --nanopb_out=. $*.proto
-
-
-# target to also clean generated proto c files
-.SILENT : cleanall
-cleanall : clean
-	-@rm -rf proto/*.pb.c proto/*.pb.h
 
 load: all load-only
 load-only:

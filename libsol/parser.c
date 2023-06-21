@@ -38,7 +38,7 @@ void tohex(unsigned char * in, size_t insz, char * out, size_t outsz)
     pout[-1] = 0;
 }
 
-bool read_address_field(pb_istream_t *stream, const pb_field_iter_t *field, void **arg)
+bool read_address_field(pb_istream_t *stream, const pb_field_t *field, void **arg)
 {
     pb_byte_t* buffer = *arg;
     pb_byte_t binBuffer[BUFFER_SIZE] = {0};
@@ -50,13 +50,13 @@ bool read_address_field(pb_istream_t *stream, const pb_field_iter_t *field, void
     return true;
 }
 
-bool read_string_field(pb_istream_t *stream, const pb_field_iter_t *field, void **arg)
+bool read_string_field(pb_istream_t *stream, const pb_field_t *field, void **arg)
 {
     pb_byte_t* buffer = *arg;
     return pb_read(stream, buffer, stream->bytes_left);
 }
 
-bool read_transfer_input(pb_istream_t *stream, const pb_field_iter_t *field, void **arg)
+bool read_transfer_input(pb_istream_t *stream, const pb_field_t *field, void **arg)
 {
     bool status = pb_decode(stream, aelf_TransferInput_fields, *arg);
     return status;
@@ -114,6 +114,7 @@ int parse_length(Parser* parser, size_t* value) {
     *value = value_u8 & 0x7f;
 
     if (value_u8 & 0x80) {
+        
         BAIL_IF(parse_u8(parser, &value_u8));
         *value = ((value_u8 & 0x7f) << 7) | *value;
         if (value_u8 & 0x80) {
