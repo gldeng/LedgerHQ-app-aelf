@@ -73,6 +73,8 @@ bool read_string_field(pb_istream_t *stream, const pb_field_t *field, void **arg
 
 bool read_transfer_input(pb_istream_t *stream, const pb_field_t *field, void **arg);
 
+void advance(Parser* parser, size_t num);
+
 int parse_u8(Parser* parser, uint8_t* value);
 
 int parse_u32(Parser* parser, uint32_t* value);
@@ -95,6 +97,8 @@ int parse_blockhash(Parser* parser, const Hash** hash);
 int parse_message_header(Parser* parser, MessageHeader* header);
 
 int parse_data(Parser* parser, const uint8_t** data, size_t* data_length);
+
+int readVarInt(Parser* parser, int *index, uint64_t* value);
 
 // FIXME: I don't belong here
 static inline bool pubkeys_equal(const Pubkey* pubkey1, const Pubkey* pubkey2) {

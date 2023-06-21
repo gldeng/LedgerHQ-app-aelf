@@ -85,41 +85,55 @@ int parse_system_transfer_instruction(Parser* parser,
                                       SystemTransferInfo* info) {
 
     int index = 0;
-    while (parser->buffer_length) {
-        size_t key;
-        parse_length(parser, key);
+    while (index < parser->buffer_length) {
+        PRINTF("GUI: %.*H\n", parser->buffer_length, parser->buffer);
+        PRINTF("GUI Length: %d\n", parser->buffer_length);
+        uint64_t key;
+        readVarInt(parser, &index, &key);
         uint32_t field_number = key >> 3;
         uint32_t wire_type = key & 7;
+        PRINTF("GUI FIELD NUMBER: %d\n", field_number);
         switch (field_number) {
             case 1:
                 // Address from
                 {
-                    advance(parser, 4);
+                    advance(parser, 2);
+                    uint64_t length;
+                    readVarInt(parser, &index, &length);
+                    PRINTF("GUI LENGTH FROM: %d\n", &length);
                     BAIL_IF(parse_pubkey(parser, &info->from));
+                    PRINTF("FROM ADDRESS: %.*H\n", PUBKEY_SIZE, info->from);
                 }
                 break;
-            // case 2:
-            //     // Address 'to'
-            //     {
-            //         advance(parser, 4);
-            //         BAIL_IF(parse_pubkey(parser, &info->to));
-            //     }
-            //     break;
-            // case 3:
-            //     // ref_block_number (int64)
-            //     {
-            //         // uint64_t value = readVarInt(&parser->buffer, &index);
-            //         BAIL_IF(parse_u64(parser, &info->ref_block_number));
-            //     }
-            //     break;
-            // case 4:
-            //     // ref_block_prefix (string)
-            //     {
-            //         uint64_t length = readVarInt(&parser->buffer, &index);
-            //         BAIL_IF(parse_data(parser, &instruction->ticker, length));
-            //         index += length;
-            //     }
-            //     break;
+            case 2:
+                // Address 'to'
+                {
+                    advance(parser, 2);
+                    uint64_t length;
+                    readVarInt(parser, &index, &length);
+                    PRINTF("GUI LENGTH FROM: %d\n", &length);
+                    BAIL_IF(parse_pubkey(parser, &info->to));
+                    PRINTF("TO ADDRESS: %.*H\n", PUBKEY_SIZE, info->to);
+                }
+                break;
+            case 3:
+                // ref_block_number (int64)
+                {
+                    uint64_t value;
+                    BAIL_IF(parse_u32(parser, &info->ref_block_number));
+                    // readVarInt(parser, &index, &value);
+                    PRINTF("GUI VALUE: %d\n", &info->ref_block_number);
+                }
+                break;
+            case 4:
+                // ref_block_prefix (string)
+                {
+                    readVarInt(parser, &index, &info->ref_block_prefix.length);
+
+                    PRINTF("GUI REF LENGTH: %d\n", info->ref_block_prefix.length);
+                    // BAIL_IF(parse_sized_string(parser, &info->ref_block_prefix));
+                }
+                break;
             // case 5:
             //     // method_name (string)
             //     {
