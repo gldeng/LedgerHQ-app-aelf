@@ -10,7 +10,7 @@
 #define HASH_SIZE      32
 #define BLOCKHASH_SIZE HASH_SIZE
 
-#define BUFFER_SIZE 32
+#define FIELD_NUMBER_PARAMS 4
 
 typedef struct Parser {
     const uint8_t* buffer;
@@ -54,25 +54,6 @@ static inline int parser_is_empty(Parser* parser) {
     return parser->buffer_length == 0;
 }
 
-
-// This symbol is defined by the link script to be at the start of the stack
-// area.
-extern unsigned long _stack;
-
-#define STACK_CANARY (*((volatile uint32_t*) &_stack))
-
-void init_canary();
-
-void check_canary();
-
-void tohex(unsigned char * in, size_t insz, char * out, size_t outsz);
-
-bool read_address_field(pb_istream_t *stream, const pb_field_t *field, void **arg);
-
-bool read_string_field(pb_istream_t *stream, const pb_field_t *field, void **arg);
-
-bool read_transfer_input(pb_istream_t *stream, const pb_field_t *field, void **arg);
-
 void advance(Parser* parser, size_t num);
 
 int parse_u8(Parser* parser, uint8_t* value);
@@ -98,7 +79,7 @@ int parse_message_header(Parser* parser, MessageHeader* header);
 
 int parse_data(Parser* parser, const uint8_t** data, size_t* data_length);
 
-int readVarInt(Parser* parser, int *index, uint64_t* value);
+int readVarInt(Parser* parser, uint64_t* value);
 
 // FIXME: I don't belong here
 static inline bool pubkeys_equal(const Pubkey* pubkey1, const Pubkey* pubkey2) {

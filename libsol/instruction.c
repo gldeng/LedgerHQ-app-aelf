@@ -33,65 +33,67 @@
 //     return result;
 // }
 
-// uint8_t parseParams(uint8_t *data, size_t numBytes) {
-//   int index = 0;
-//   while (index < numBytes) {
-//     uint64_t key = readVarInt(data, &index);
-//     uint32_t field_number = key >> 3;
-//     uint32_t wire_type = key & 7;
-//     switch (field_number) {
-//         case 1:
-//             // Address 'to'
-//             {
-//                 uint64_t length = readVarInt(data, &index);
-//                 index += length;
-//             }
-//             break;
-//         case 2:
-//             // Ticker (String)
-//             {
-//                 uint64_t length = readVarInt(data, &index);
-//                 for (uint64_t i = 0; i < length; i++) {
-//                     putchar(data[index + i]);
-//                 }
-//                 index += length;
-//             }
-//             break;
-//         case 3:
-//             // Amount (Varint)
-//             {
-//                 uint64_t value = readVarInt(data, &index);
-//             }
-//             break;
-//         case 4:
-//             // Memo (string)
-//             {
-//                 uint64_t length = readVarInt(data, &index);
-//                 for (uint64_t i = 0; i < length; i++) {
-//                     putchar(data[index + i]);
-//                 }
-//                 index += length;
-//             }
-//             break;
-//         default:
-//             PRINTF("Unknown field number %d\n", field_number);
-//             return 1;
-//     }
-//   }
-// }
+static int parseParams(Parser *parser, SystemTransferInfo* info, uint64_t buffer_length) {
+  uint8_t index = 0;
+  while (index < FIELD_NUMBER_PARAMS) {
+    PRINTF("GUI: %.*H\n", parser->buffer_length, parser->buffer);
+    uint64_t key;
+    readVarInt(parser, &key);
+    uint32_t field_number = key >> 3;
+    switch (field_number) {
+        case 1:
+            // Address 'to'
+            {
+                advance(parser, 2);
+                uint64_t length;
+                readVarInt(parser, &length);
+                PRINTF("GUI LENGTH FROM: %d\n", &length);
+                BAIL_IF(parse_pubkey(parser, &info->dest));
+                PRINTF("FROM ADDRESS: %.*H\n", PUBKEY_SIZE, info->dest);
+                index++;
+            }
+            break;
+        case 2:
+            // Ticker (String)
+            {
+                readVarInt(parser, &info->ticker.length);
+                BAIL_IF(parse_sized_string(parser, &info->ticker));
+                index++;
+            }
+            break;
+        case 3:
+            // Amount (Varint)
+            {
+                 BAIL_IF(parse_u32(parser, &info->ref_block_number));
+                 index++;
+            }
+            break;
+        case 4:
+            // Memo (string)
+            {
+                readVarInt(parser, &info->memo.length);
+                BAIL_IF(parse_sized_string(parser, &info->memo));
+                index++;
+            }
+            break;
+        default:
+            PRINTF("Unknown field number %d\n", field_number);
+            return 1;
+    }
+  }
+  return 0;
+}
 
 int parse_system_transfer_instruction(Parser* parser,
                                       Instruction* instruction,
                                       SystemTransferInfo* info) {
 
-    int index = 0;
-    while (index < parser->buffer_length) {
+
+    while (parser->buffer_length) {
         PRINTF("GUI: %.*H\n", parser->buffer_length, parser->buffer);
-        PRINTF("GUI Length: %d\n", parser->buffer_length);
         uint64_t key;
-        readVarInt(parser, &index, &key);
+        readVarInt(parser, &key);
         uint32_t field_number = key >> 3;
-        uint32_t wire_type = key & 7;
         PRINTF("GUI FIELD NUMBER: %d\n", field_number);
         switch (field_number) {
             case 1:
@@ -99,10 +101,8 @@ int parse_system_transfer_instruction(Parser* parser,
                 {
                     advance(parser, 2);
                     uint64_t length;
-                    readVarInt(parser, &index, &length);
-                    PRINTF("GUI LENGTH FROM: %d\n", &length);
+                    readVarInt(parser, &length);
                     BAIL_IF(parse_pubkey(parser, &info->from));
-                    PRINTF("FROM ADDRESS: %.*H\n", PUBKEY_SIZE, info->from);
                 }
                 break;
             case 2:
@@ -110,52 +110,40 @@ int parse_system_transfer_instruction(Parser* parser,
                 {
                     advance(parser, 2);
                     uint64_t length;
-                    readVarInt(parser, &index, &length);
-                    PRINTF("GUI LENGTH FROM: %d\n", &length);
+                    readVarInt(parser, &length);
                     BAIL_IF(parse_pubkey(parser, &info->to));
-                    PRINTF("TO ADDRESS: %.*H\n", PUBKEY_SIZE, info->to);
                 }
                 break;
             case 3:
                 // ref_block_number (int64)
                 {
-                    uint64_t value;
+                    // uint64_t value;
+                    // readVarInt(parser, &value);
                     BAIL_IF(parse_u32(parser, &info->ref_block_number));
-                    // readVarInt(parser, &index, &value);
-                    PRINTF("GUI VALUE: %d\n", &info->ref_block_number);
                 }
                 break;
             case 4:
                 // ref_block_prefix (string)
                 {
-                    readVarInt(parser, &index, &info->ref_block_prefix.length);
-
-                    PRINTF("GUI REF LENGTH: %d\n", info->ref_block_prefix.length);
-                    // BAIL_IF(parse_sized_string(parser, &info->ref_block_prefix));
+                    readVarInt(parser, &info->ref_block_prefix.length);
+                    BAIL_IF(parse_sized_string(parser, &info->ref_block_prefix));
                 }
                 break;
-            // case 5:
-            //     // method_name (string)
-            //     {
-            //         uint64_t length = readVarInt(&parser->buffer, &index);
-            //         index += length;
-            //     }
-            //     break;
-            // case 6:
-            //     // params (bytes)
-            //     {
-            //         uint64_t length = readVarInt(&parser->buffer, &index);
-            //         parseParams(&parser->buffer + index, length);
-            //         index += length;
-            //     }
-            //     break;
-            // case 10000:
-            //     // signature (bytes)
-            //     {
-            //         uint64_t length = readVarInt(&parser->buffer, &index);
-            //         index += length;
-            //     }
-            //     break;
+            case 5:
+                // method_name (string)
+                {
+                    readVarInt(parser, &info->method_name.length);
+                    BAIL_IF(parse_sized_string(parser, &info->method_name));
+                }
+                break;
+            case 6:
+                // params (bytes)
+                {
+                    uint64_t length;
+                    readVarInt(parser, &length);
+                    parseParams(parser, info, length);
+                }
+                break;
             default:
                 PRINTF("Unknown field number %d\n", field_number);
                 return 1;
