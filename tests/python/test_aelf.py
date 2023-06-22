@@ -8,24 +8,7 @@ from .apps.aelf_utils import FOREIGN_PUBLIC_KEY, FOREIGN_PUBLIC_KEY_2, CHAIN_PUB
 
 from .utils import ROOT_SCREENSHOT_PATH
 
-# def test_aelf_simple_transfer_ok_1(backend, navigator, test_name):
-#     aelf = AelfClient(backend)
-#     from_public_key = aelf.get_public_key(ELF_PACKED_DERIVATION_PATH)
-#     # Create instruction
-#     instruction: SystemInstructionTransfer = SystemInstructionTransfer(FOREIGN_PUBLIC_KEY, TICKER, AMOUNT)
-#     message: bytes = MessageTransfer(instruction).serialize()
-#     print(list(message))
-#     with aelf.send_async_sign_transfer(ELF_PACKED_DERIVATION_PATH, message):
-#         navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
-#                                                   [NavInsID.BOTH_CLICK],
-#                                                   "Approve",
-#                                                   ROOT_SCREENSHOT_PATH,
-#                                                   test_name)
-#     signature: bytes = aelf.get_async_response().data
-
-#     verify_signature(from_public_key, message, signature)
-
-def test_aelf_simple_transfer_txn_ok_2(backend, navigator, test_name):
+def test_aelf_simple_transfer_txn_ok(backend, navigator, test_name):
     aelf = AelfClient(backend)
     from_public_key = aelf.get_public_key(ELF_PACKED_DERIVATION_PATH_2)
     # Create instruction
@@ -35,7 +18,7 @@ def test_aelf_simple_transfer_txn_ok_2(backend, navigator, test_name):
         navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
                                                   [NavInsID.BOTH_CLICK],
                                                   "Approve",
-                                                  ELF_PACKED_DERIVATION_PATH_2,
+                                                  ROOT_SCREENSHOT_PATH,
                                                   test_name)
     signature: bytes = aelf.get_async_response().data
 

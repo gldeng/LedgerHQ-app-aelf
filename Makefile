@@ -142,6 +142,11 @@ ifneq ($(WITH_LIBSOL),0)
 endif
 
 
+# target to also clean generated proto c files
+.SILENT : cleanall
+cleanall : clean
+	-@rm -rf dep obj
+
 load: all load-only
 load-only:
 	python3 -m ledgerblue.loadApp $(APP_LOAD_PARAMS)
