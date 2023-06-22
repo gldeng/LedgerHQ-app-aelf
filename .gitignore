@@ -10,6 +10,7 @@ src/glyphs.h
 gitignore
 .vagrant
 libsol/target
+build
 
 # Python
 __pycache__
