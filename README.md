@@ -109,9 +109,12 @@ from clean and clean must be run _before_ switching
 Requires that the `BOLOS_SDK` envvar [be set](https://developers.ledger.com/docs/nano-app/load/).
 This can be achieved by first [building](#build) for the desired target device.
 ### Load
-```bash
-make load-only
-```
+
+1. Have Docker running
+2. Open the VS Code actions with ctrl + shift + b (command + shift + b on a Mac)
+3. To pull and run the Docker image chose "Run dev-tools image"
+4. To build your app chose "Build app"
+5. To load it to a device, chose Load app on device
 
 ### Delete
 ```bash
@@ -130,6 +133,13 @@ First enable `blind-signing` in the App settings
 cargo run --manifest-path tests/Cargo.toml
 ```
 ### Python
+First install the deps
+```bash
+sudo apt-get update && sudo apt-get install -y qemu-user-static
+pip install --extra-index-url https://test.pypi.org/simple/ -r tests/python/requirements.txt
+```
+
+Then run the tests
 ```bash
 ./python-test.sh <target_device>
 ```
