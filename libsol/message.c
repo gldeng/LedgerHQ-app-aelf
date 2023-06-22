@@ -5,7 +5,7 @@
 #include "util.h"
 #include <string.h>
 
-// change this if you want to be able to add succesive tx
+// change this if you want to be able to add successive tx
 #define MAX_INSTRUCTIONS 1
 
 int process_message_body(const uint8_t* message_body, int message_body_length, int ins_code) {

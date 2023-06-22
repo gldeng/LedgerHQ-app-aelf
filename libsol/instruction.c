@@ -3,8 +3,6 @@
 #include "sol/transaction_summary.h"
 #include "util.h"
 #include <string.h>
-#include "../proto/pb_decode.h"
-#include "../proto/message.pb.h"
 
 static int parseParams(Parser *parser, SystemTransferInfo* info) {
   uint8_t index = 0;

@@ -1,8 +1,5 @@
 #include "sol/parser.h"
 #include "util.h"
-#include <pb.h>
-#include <pb_decode.h>
-#include "proto/message.pb.h"
 
 #define OFFCHAIN_MESSAGE_SIGNING_DOMAIN \
     "\xff"                              \
