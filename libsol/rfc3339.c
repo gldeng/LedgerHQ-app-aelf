@@ -51,7 +51,7 @@ static int rdn_to_ymd(uint32_t rdn, uint16_t *yp, uint16_t *mp, uint16_t *dp) {
 
     *yp = (uint16_t) y;
     *mp = (uint16_t) m;
-    *dp = (uint16_t) (d - DayOffset[m]);
+    *dp = (uint16_t)(d - DayOffset[m]);
 
     return 0;
 }

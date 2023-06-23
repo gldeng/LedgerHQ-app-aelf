@@ -138,7 +138,7 @@ int readVarInt(Parser* parser, uint64_t* value) {
     while (1) {
         uint8_t byte = *parser->buffer;
         advance(parser, 1);
-        *value |= (uint64_t) (byte & 0x7F) << shift;
+        *value |= (uint64_t)(byte & 0x7F) << shift;
         if ((byte & 0x80) == 0) {
             break;
         }

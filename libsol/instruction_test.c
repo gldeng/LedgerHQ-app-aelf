@@ -20,7 +20,7 @@ void test_parse_system_transfer_instruction() {
     Parser parser = {message, sizeof(message)};
     SystemTransferInfo info;
     assert(parse_system_transfer_instruction(&parser, &info) == 0);
-    
+
     assert(parser.buffer_length == 0);
 }
 
