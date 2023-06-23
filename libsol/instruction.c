@@ -4,25 +4,107 @@
 #include "util.h"
 #include <string.h>
 
-int parse_system_transfer_instruction(Parser* parser,
-                                      Instruction* instruction,
-                                      SystemTransferInfo* info) {
-    BAIL_IF(parse_pubkey(parser, &info->to));
-    BAIL_IF(parse_data(parser, &instruction->ticker, &instruction->ticker_length));
-    BAIL_IF(parse_u64(parser, &info->amount));
+static int parseParams(Parser* parser, SystemTransferInfo* info) {
+    uint8_t index = 0;
+    while (index < FIELD_NUMBER_PARAMS) {
+        uint64_t key;
+        readVarInt(parser, &key);
+        uint32_t field_number = key >> 3;
+        switch (field_number) {
+            case 1:
+                // Address 'to'
+                {
+                    advance(parser, 2);
+                    uint64_t length;
+                    readVarInt(parser, &length);
+                    BAIL_IF(parse_pubkey(parser, &info->dest));
+                    index++;
+                }
+                break;
+            case 2:
+                // Ticker (String)
+                {
+                    readVarInt(parser, &info->ticker.length);
+                    BAIL_IF(parse_sized_string(parser, &info->ticker));
+                    index++;
+                }
+                break;
+            case 3:
+                // Amount (Varint)
+                {
+                    BAIL_IF(readVarInt(parser, (uint64_t*) &info->amount););
+                    index++;
+                }
+                break;
+            case 4:
+                // Memo (string)
+                {
+                    readVarInt(parser, &info->memo.length);
+                    BAIL_IF(parse_sized_string(parser, &info->memo));
+                    index++;
+                }
+                break;
+            default:
+                return 1;
+        }
+    }
     return 0;
 }
 
-int parse_system_get_tx_result_instruction(Parser* parser,
-                                           Instruction* instruction,
-                                           SystemGetTxResultInfo* info) {
-    BAIL_IF(parse_pubkey(parser, &info->from));
-    BAIL_IF(parse_pubkey(parser, &info->chain));
-    BAIL_IF(parse_u64(parser, &info->ref_block_number));
-    BAIL_IF(parse_sized_string(parser, &info->method_name));
-    BAIL_IF(parse_pubkey(parser, &info->to));
-    BAIL_IF(parse_data(parser, &instruction->ticker, &instruction->ticker_length));
-    BAIL_IF(parse_u64(parser, &info->amount));
+int parse_system_transfer_instruction(Parser* parser, SystemTransferInfo* info) {
+    while (parser->buffer_length) {
+        uint64_t key;
+        readVarInt(parser, &key);
+        uint32_t field_number = key >> 3;
+        switch (field_number) {
+            case 1:
+                // Address from
+                {
+                    advance(parser, 2);
+                    uint64_t length;
+                    readVarInt(parser, &length);
+                    BAIL_IF(parse_pubkey(parser, &info->from));
+                }
+                break;
+            case 2:
+                // Address 'to'
+                {
+                    advance(parser, 2);
+                    uint64_t length;
+                    readVarInt(parser, &length);
+                    BAIL_IF(parse_pubkey(parser, &info->to));
+                }
+                break;
+            case 3:
+                // ref_block_number (varint)
+                { BAIL_IF(readVarInt(parser, (uint64_t*) &info->ref_block_number);); }
+                break;
+            case 4:
+                // ref_block_prefix (string)
+                {
+                    readVarInt(parser, &info->ref_block_prefix.length);
+                    BAIL_IF(parse_sized_string(parser, &info->ref_block_prefix));
+                }
+                break;
+            case 5:
+                // method_name (string)
+                {
+                    readVarInt(parser, &info->method_name.length);
+                    BAIL_IF(parse_sized_string(parser, &info->method_name));
+                }
+                break;
+            case 6:
+                // params (bytes)
+                {
+                    uint64_t length;
+                    readVarInt(parser, &length);
+                    parseParams(parser, info);
+                }
+                break;
+            default:
+                return 1;
+        }
+    }
     return 0;
 }
 
@@ -33,34 +115,10 @@ int print_system_transfer_info(const SystemTransferInfo* info) {
     summary_item_set_amount(item, "Transfer", info->amount);
 
     item = transaction_summary_general_item();
-    summary_item_set_pubkey(item, "Recipient", info->to);
-
-    return 0;
-}
-
-int print_system_get_tx_result_info(const SystemGetTxResultInfo* info) {
-    SummaryItem* item;
-
-    item = transaction_summary_primary_item();
-    summary_item_set_string(item, "Type", "Get Transaction result");
+    summary_item_set_pubkey(item, "Recipient", info->dest);
 
     item = transaction_summary_general_item();
-    summary_item_set_pubkey(item, "From", info->from);
-
-    item = transaction_summary_general_item();
-    summary_item_set_pubkey(item, "Contract", info->chain);
-
-    item = transaction_summary_general_item();
-    summary_item_set_i64(item, "Ref block number", info->ref_block_number);
-
-    item = transaction_summary_general_item();
-    summary_item_set_sized_string(item, "Method name", &info->method_name);
-
-    item = transaction_summary_general_item();
-    summary_item_set_pubkey(item, "Recipient", info->to);
-
-    item = transaction_summary_general_item();
-    summary_item_set_amount(item, "Amount", info->amount);
+    summary_item_set_sized_string(item, "Memo", &info->memo);
 
     return 0;
 }

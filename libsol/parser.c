@@ -9,7 +9,7 @@ static int check_buffer_length(Parser* parser, size_t num) {
     return parser->buffer_length < num ? 1 : 0;
 }
 
-static void advance(Parser* parser, size_t num) {
+void advance(Parser* parser, size_t num) {
     parser->buffer += num;
     parser->buffer_length -= num;
 }
@@ -82,7 +82,7 @@ int parse_option(Parser* parser, enum Option* value) {
 }
 
 int parse_sized_string(Parser* parser, SizedString* string) {
-    BAIL_IF(parse_u64(parser, &string->length));
+    // BAIL_IF(parse_u64(parser, &string->length));
     BAIL_IF(string->length > SIZE_MAX);
     size_t len = (size_t) string->length;
     BAIL_IF(check_buffer_length(parser, len));
@@ -129,5 +129,20 @@ int parse_data(Parser* parser, const uint8_t** data, size_t* data_length) {
     BAIL_IF(check_buffer_length(parser, *data_length));
     *data = parser->buffer;
     advance(parser, *data_length);
+    return 0;
+}
+
+int readVarInt(Parser* parser, uint64_t* value) {
+    *value = 0;
+    int shift = 0;
+    while (1) {
+        uint8_t byte = *parser->buffer;
+        advance(parser, 1);
+        *value |= (uint64_t) (byte & 0x7F) << shift;
+        if ((byte & 0x80) == 0) {
+            break;
+        }
+        shift += 7;
+    }
     return 0;
 }

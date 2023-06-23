@@ -25,6 +25,8 @@ int print_sized_string(const SizedString *string, char *out, size_t out_length);
 
 int print_string(const char *in, char *out, size_t out_length);
 
+int print_pubkey(const Pubkey *pubkey, char *out, size_t out_length);
+
 int print_summary(const char *in,
                   char *out,
                   size_t out_length,

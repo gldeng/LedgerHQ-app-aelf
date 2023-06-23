@@ -84,6 +84,7 @@ endif
 
 DEBUG := 0
 ifneq ($(DEBUG),0)
+    $(info DEBUG ENABLED)
     DEFINES += HAVE_PRINTF
     ifeq ($(TARGET_NAME),TARGET_NANOS)
         DEFINES += PRINTF=screen_printf
@@ -91,7 +92,8 @@ ifneq ($(DEBUG),0)
         DEFINES += PRINTF=mcu_usb_printf
     endif
 else
-        DEFINES += PRINTF\(...\)=
+    $(info DEBUG DISABLED)
+    DEFINES += PRINTF\(...\)=
 endif
 
 ifneq ($(BOLOS_ENV),)
@@ -109,7 +111,7 @@ $(info GCCPATH is not set: arm-none-eabi-* will be used from PATH)
 endif
 
 CC      := $(CLANGPATH)clang
-CFLAGS  += -O3 -Os
+CFLAGS  += -O3 -Os -I. -Iproto
 AS      := $(GCCPATH)arm-none-eabi-gcc
 LD      := $(GCCPATH)arm-none-eabi-gcc
 LDFLAGS += -O3 -Os
@@ -117,7 +119,7 @@ LDLIBS  += -lm -lgcc -lc
 
 include $(BOLOS_SDK)/Makefile.glyphs
 
-APP_SOURCE_PATH += src
+APP_SOURCE_PATH += src proto
 SDK_SOURCE_PATH += lib_stusb lib_stusb_impl lib_ux
 
 ifeq ($(TARGET_NAME),TARGET_NANOX)
@@ -138,6 +140,12 @@ ifneq ($(WITH_LIBSOL),0)
     DEFINES      += HAVE_SNPRINTF_FORMAT_U
     DEFINES      += NDEBUG
 endif
+
+
+# target to also clean generated proto c files
+.SILENT : cleanall
+cleanall : clean
+	-@rm -rf dep obj
 
 load: all load-only
 load-only:

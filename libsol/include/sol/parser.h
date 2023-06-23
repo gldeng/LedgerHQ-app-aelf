@@ -9,6 +9,8 @@
 #define HASH_SIZE      32
 #define BLOCKHASH_SIZE HASH_SIZE
 
+#define FIELD_NUMBER_PARAMS 4
+
 typedef struct Parser {
     const uint8_t* buffer;
     size_t buffer_length;
@@ -51,6 +53,8 @@ static inline int parser_is_empty(Parser* parser) {
     return parser->buffer_length == 0;
 }
 
+void advance(Parser* parser, size_t num);
+
 int parse_u8(Parser* parser, uint8_t* value);
 
 int parse_u32(Parser* parser, uint32_t* value);
@@ -73,6 +77,8 @@ int parse_blockhash(Parser* parser, const Hash** hash);
 int parse_message_header(Parser* parser, MessageHeader* header);
 
 int parse_data(Parser* parser, const uint8_t** data, size_t* data_length);
+
+int readVarInt(Parser* parser, uint64_t* value);
 
 // FIXME: I don't belong here
 static inline bool pubkeys_equal(const Pubkey* pubkey1, const Pubkey* pubkey2) {

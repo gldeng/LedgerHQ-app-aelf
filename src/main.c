@@ -20,6 +20,7 @@
 #include "signMessage.h"
 #include "apdu.h"
 #include "menu.h"
+#include <unistd.h>
 
 ApduCommand G_command;
 unsigned char G_io_seproxyhal_spi_buffer[IO_SEPROXYHAL_BUFFER_SIZE_B];
@@ -60,7 +61,6 @@ void handleApdu(volatile unsigned int *flags, volatile unsigned int *tx, int rx)
             break;
 
         case InsSignMessage:
-        case InsGetTxResult:
             handle_sign_message_parse_message(tx);
             handle_sign_message_ui(flags);
             break;

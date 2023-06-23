@@ -5,7 +5,7 @@
 #include "util.h"
 #include <string.h>
 
-// change this if you want to be able to add succesive tx
+// change this if you want to be able to add successive tx
 #define MAX_INSTRUCTIONS 1
 
 int process_message_body(const uint8_t* message_body, int message_body_length, int ins_code) {
@@ -17,15 +17,11 @@ int process_message_body(const uint8_t* message_body, int message_body_length, i
 
     // init parser body
     Parser parser = {message_body, message_body_length};
-    Instruction instruction;
     InstructionInfo* info = &instruction_info[instruction_count];
 
     switch (ins_code) {
         case 3:  // TRANSFER
-            parse_system_transfer_instruction(&parser, &instruction, &info->transfer);
-            break;
-        case 4:  // GET TX RESULT
-            parse_system_get_tx_result_instruction(&parser, &instruction, &info->getTxResult);
+            parse_system_transfer_instruction(&parser, &info->transfer);
             break;
     };
 
@@ -36,8 +32,6 @@ int process_message_body(const uint8_t* message_body, int message_body_length, i
     switch (ins_code) {
         case 3:  // TRANSFER
             return print_system_transfer_info(&display_instruction_info[0]->transfer);
-        case 4:  // GET TX RESULT
-            return print_system_get_tx_result_info(&display_instruction_info[0]->getTxResult);
     };
     return 1;
 }
