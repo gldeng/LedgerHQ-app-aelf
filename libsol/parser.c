@@ -8,7 +8,6 @@
     "\xff"                              \
     "aelf offchain"
 
-
 static int check_buffer_length(Parser* parser, size_t num) {
     return parser->buffer_length < num ? 1 : 0;
 }
@@ -61,7 +60,6 @@ int parse_length(Parser* parser, size_t* value) {
     *value = value_u8 & 0x7f;
 
     if (value_u8 & 0x80) {
-        
         BAIL_IF(parse_u8(parser, &value_u8));
         *value = ((value_u8 & 0x7f) << 7) | *value;
         if (value_u8 & 0x80) {
@@ -136,7 +134,6 @@ int parse_data(Parser* parser, const uint8_t** data, size_t* data_length) {
     advance(parser, *data_length);
     return 0;
 }
-
 
 int readVarInt(Parser* parser, uint64_t* value) {
     *value = 0;

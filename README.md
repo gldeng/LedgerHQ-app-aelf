@@ -130,6 +130,13 @@ First enable `blind-signing` in the App settings
 cargo run --manifest-path tests/Cargo.toml
 ```
 ### Python
+First install the deps
+```bash
+sudo apt-get update && sudo apt-get install -y qemu-user-static
+pip install --extra-index-url https://test.pypi.org/simple/ -r tests/python/requirements.txt
+```
+
+Then run the tests
 ```bash
 ./python-test.sh <target_device>
 ```
