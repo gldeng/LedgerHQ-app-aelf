@@ -32,7 +32,7 @@ static int parseParams(Parser* parser, SystemTransferInfo* info) {
             case 3:
                 // Amount (Varint)
                 {
-                    BAIL_IF(readVarInt(parser, (uint64_t *) &info->amount););
+                    BAIL_IF(readVarInt(parser, (uint64_t*) &info->amount););
                     index++;
                 }
                 break;
@@ -77,7 +77,7 @@ int parse_system_transfer_instruction(Parser* parser, SystemTransferInfo* info) 
                 break;
             case 3:
                 // ref_block_number (varint)
-                { BAIL_IF(readVarInt(parser, (uint64_t *) &info->ref_block_number);); }
+                { BAIL_IF(readVarInt(parser, (uint64_t*) &info->ref_block_number);); }
                 break;
             case 4:
                 // ref_block_prefix (string)
