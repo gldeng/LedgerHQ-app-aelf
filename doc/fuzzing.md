@@ -10,7 +10,7 @@ cd fuzzing
 ./run.sh
 ```
 
-Initial corpus has been generated from the testcases found in the `libsol` directory.
+Initial corpus has been generated from the testcases found in the `lib` directory.
 
 ## Code coverage
 

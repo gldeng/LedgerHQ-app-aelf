@@ -1,7 +1,7 @@
 #include "instruction.h"
-#include "sol/parser.h"
-#include "sol/message.h"
-#include "sol/print_config.h"
+#include "aelf/parser.h"
+#include "aelf/message.h"
+#include "aelf/print_config.h"
 #include "util.h"
 #include <string.h>
 

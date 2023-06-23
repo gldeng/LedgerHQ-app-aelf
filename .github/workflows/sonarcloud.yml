@@ -46,7 +46,7 @@ jobs:
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
           echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
       - name: Generate code coverage
-        working-directory: libsol
+        working-directory: lib
         run: |
           make COVERAGE=1
           gcovr --root .. --sonarqube ../coverage.xml

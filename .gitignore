@@ -9,7 +9,7 @@ src/glyphs.h
 .devcontainer
 gitignore
 .vagrant
-libsol/target
+lib/target
 build
 
 # Python

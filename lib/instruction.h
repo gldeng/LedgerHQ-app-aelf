@@ -1,7 +1,7 @@
 #pragma once
 
-#include "sol/parser.h"
-#include "sol/print_config.h"
+#include "aelf/parser.h"
+#include "aelf/print_config.h"
 
 typedef struct SystemTransferInfo {
     const Pubkey* from;

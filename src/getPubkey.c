@@ -3,7 +3,7 @@
 #include "os.h"
 #include "ux.h"
 #include "utils.h"
-#include "sol/printer.h"
+#include "aelf/printer.h"
 
 static uint8_t G_publicKey[PUBKEY_LENGTH];
 static char G_publicKeyStr[BASE58_PUBKEY_LENGTH];

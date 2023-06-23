@@ -7,7 +7,7 @@ services:
     volumes:
       - ./bin:/speculos/apps
       - ./src:/speculos/src1
-      - ./libsol:/speculos/src2
+      - ./lib:/speculos/src2
       - ./proto:/speculos/src3
 
     ports:
