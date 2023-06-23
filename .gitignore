@@ -6,11 +6,11 @@ dev-env
 src/glyphs.c
 src/glyphs.h
 .idea
-.vscode
 .devcontainer
 gitignore
 .vagrant
 libsol/target
+build
 
 # Python
 __pycache__

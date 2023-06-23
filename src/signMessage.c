@@ -99,7 +99,7 @@ void handle_sign_message_parse_message(volatile unsigned int *tx) {
     print_config.expert_mode = (N_storage.settings.display_mode == DisplayModeExpert);
     print_config.signer_pubkey = NULL;
     MessageHeader *header = &print_config.header;
-    
+
     // if (parse_message_header(&parser, header) != 0) {
     //     // This is not a valid Aelf message
     //     THROW(ApduReplyAelfInvalidMessage);

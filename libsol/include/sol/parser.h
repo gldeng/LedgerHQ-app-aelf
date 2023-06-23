@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
-#include "../../../proto/pb.h"
 
 #define PUBKEY_SIZE    32
 #define HASH_SIZE      32
