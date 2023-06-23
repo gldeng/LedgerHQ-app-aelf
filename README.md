@@ -80,7 +80,6 @@ git clone --branch 1.0.3 --depth 1 https://github.com/LedgerHQ/nanosplus-secure-
 
 ### For running the test suite
 * [Rust](https://rustup.rs/)
-* Solana [system dependencies](https://github.com/solana-labs/solana/#1-install-rustc-cargo-and-rustfmt)
 
 ## Build
 It is highly recommended that you read and understand the [Ledger App Builder](https://developers.ledger.com/docs/nano-app/build/)
@@ -114,7 +113,7 @@ This can be achieved by first [building](#build) for the desired target device.
 2. Open the VS Code actions with ctrl + shift + b (command + shift + b on a Mac)
 3. To pull and run the Docker image chose "Run dev-tools image"
 4. To build your app chose "Build app"
-5. To load it to a device, chose Load app on device
+5. To load it to a device, chose "Load app on device"
 
 ### Delete
 ```bash

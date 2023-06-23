@@ -10,7 +10,6 @@ class INS(IntEnum):
     INS_GET_APP_CONFIGURATION = 0x01
     INS_GET_PUBKEY = 0x02
     INS_SIGN_TRANSFER = 0x03
-    INS_GET_TX_RESULT = 0x04
 
 CLA = 0xE0
 
@@ -116,28 +115,6 @@ class AelfClient:
                                          final_p2,
                                          message_splited_prefixed[-1]):
             yield
-
-    @contextmanager
-    def send_async_get_tx_result(self,
-                                    derivation_path : bytes,
-                                    message: bytes) -> Generator[None, None, None]:
-            message_splited_prefixed = self.split_and_prefix_message(derivation_path, message)
-
-            # Send all chunks with P2_MORE except for the last chunk
-            # Send all chunks with P2_EXTEND except for the first chunk
-            if len(message_splited_prefixed) > 1:
-                final_p2 = P2_EXTEND
-                self.send_first_message_batch(message_splited_prefixed[:-1], P1_CONFIRM)
-            else:
-                final_p2 = 0
-
-            with self._client.exchange_async(CLA,
-                                            INS.INS_GET_TX_RESULT,
-                                            P1_CONFIRM,
-                                            final_p2,
-                                            message_splited_prefixed[-1]):
-                yield
-
 
     def get_async_response(self) -> RAPDU:
         return self._client.last_async_response

@@ -17,28 +17,6 @@ class SystemInstruction(IntEnum):
     CreateAccount           = 0x00
     Assign                  = 0x01
     Transfer                = 0x02
-    GetTxResult             = 0x03
-
-
-# class MessageHeader:
-#     def __init__(self, num_required_signatures: int, num_readonly_signed_accounts: int, num_readonly_unsigned_accounts: int):
-#         self.num_required_signatures = num_required_signatures
-#         self.num_readonly_signed_accounts = num_readonly_signed_accounts
-#         self.num_readonly_unsigned_accounts = num_readonly_unsigned_accounts
-
-#     def serialize(self) -> bytes:
-#         return self.num_required_signatures.to_bytes(1, byteorder='little') + \
-#                self.num_readonly_signed_accounts.to_bytes(1, byteorder='little') + \
-#                self.num_readonly_unsigned_accounts.to_bytes(1, byteorder='little')
-
-# class AccountMeta:
-#     pubkey: bytes
-#     is_signer: bool
-#     is_writable: bool
-#     def __init__(self, pubkey: bytes, is_signer: bool, is_writable: bool):
-#         self.pubkey = pubkey
-#         self.is_signer = is_signer
-#         self.is_writable = is_writable
 
 # Only support Transfer instruction for now
 # TODO add other instructions if the need arises
