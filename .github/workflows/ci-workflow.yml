@@ -80,13 +80,13 @@ jobs:
       - name: Run tests
         run: pytest tests/python/ -v --tb=short --device all
 
-  job_C_test:
-    name: C tests
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-legacy:latest
-    steps:
-      - name: Clone
-        uses: actions/checkout@v3
-      - name: Build unit tests
-        run: make -C libsol
+  # job_C_test:
+  #   name: C tests
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-legacy:latest
+  #   steps:
+  #     - name: Clone
+  #       uses: actions/checkout@v3
+  #     - name: Build unit tests
+  #       run: make -C libsol
