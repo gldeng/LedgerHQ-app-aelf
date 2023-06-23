@@ -15,7 +15,6 @@ typedef struct SystemTransferInfo {
     SizedString memo;
 } SystemTransferInfo;
 
-
 typedef struct InstructionInfo {
     union {
         SystemTransferInfo transfer;
