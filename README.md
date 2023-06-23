@@ -29,7 +29,7 @@ It will allow you, whether you are developing on macOS, Windows or Linux to quic
     
 # Build
 Open the vscode tasks with  `ctrl + shift + b` (`command + shift + b` on a Mac) and run the build for the device model of your choice with `Build app`.
-To buid the app in debug mode use `Build app [Debug]` instead.
+To build the app in debug mode use `Build app [Debug]` instead.
 
 # Clean
 Open the vscode tasks with  `ctrl + shift + b` (`command + shift + b` on a Mac) and run the build for the device model of your choice with `Clean build files`.
