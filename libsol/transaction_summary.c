@@ -133,8 +133,7 @@ int transaction_summary_set_fee_payer_pubkey(const Pubkey* pubkey) {
     return 0;
 }
 
-static int transaction_summary_update_display_for_item(const SummaryItem* item,
-                                                       enum DisplayFlags flags) {
+static int transaction_summary_update_display_for_item(const SummaryItem* item) {
     switch (item->kind) {
         case SummaryItemNone:
             return 1;
@@ -155,7 +154,7 @@ static int transaction_summary_update_display_for_item(const SummaryItem* item,
             BAIL_IF(print_u64(item->u64, G_transaction_summary_text, TEXT_BUFFER_LENGTH));
             break;
         case SummaryItemPubkey: {
-            BAIL_IF(print_pubkey(item->pubkey, G_transaction_summary_text, TEXT_BUFFER_LENGTH));
+            BAIL_IF(print_pubkey(item->pubkey, G_transaction_summary_text, PUBKEY_SIZE));
             break;
         }
         case SummaryItemHash:
@@ -232,7 +231,7 @@ int transaction_summary_display_item(size_t item_index, enum DisplayFlags flags)
         return 1;
     }
 
-    return transaction_summary_update_display_for_item(item, flags);
+    return transaction_summary_update_display_for_item(item);
 }
 
 #define SET_IF_USED(item, item_kinds, index) \

@@ -99,7 +99,7 @@ int print_string(const char *in, char *out, size_t out_length) {
 int print_pubkey(const Pubkey *pubkey, char *out, size_t out_length) {
     const char hexDigits[] = "0123456789ABCDEF";
 
-    for (int i = 0; i < PUBKEY_SIZE; i++) {
+    for (size_t i = 0; i < out_length; i++) {
         out[i * 2] = hexDigits[pubkey->data[i] >> 4];
         out[i * 2 + 1] = hexDigits[pubkey->data[i] & 0x0F];
     }

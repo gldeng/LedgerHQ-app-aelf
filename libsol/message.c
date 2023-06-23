@@ -17,12 +17,11 @@ int process_message_body(const uint8_t* message_body, int message_body_length, i
 
     // init parser body
     Parser parser = {message_body, message_body_length};
-    Instruction instruction;
     InstructionInfo* info = &instruction_info[instruction_count];
 
     switch (ins_code) {
         case 3:  // TRANSFER
-            parse_system_transfer_instruction(&parser, &instruction, &info->transfer);
+            parse_system_transfer_instruction(&parser, &info->transfer);
             break;
     };
 

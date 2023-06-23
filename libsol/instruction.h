@@ -41,9 +41,7 @@ void init_canary();
 
 void check_canary();
 
-int parse_system_transfer_instruction(Parser* parser,
-                                      Instruction* instruction,
-                                      SystemTransferInfo* info);
+int parse_system_transfer_instruction(Parser* parser, SystemTransferInfo* info);
 
 int parse_system_get_tx_result_instruction(Parser* parser,
                                            Instruction* instruction,
