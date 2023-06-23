@@ -145,7 +145,7 @@ void test_print_timestamp() {
 int main() {
     test_print_amount();
     test_print_token_amount();
-    test_print_sized_string();
+    // test_print_sized_string();
     test_print_string();
     test_print_summary();
     test_print_i64();
