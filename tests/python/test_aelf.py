@@ -3,7 +3,7 @@ from ragger.navigator import NavInsID
 from ragger.utils import RAPDU
 
 from .apps.aelf import AelfClient, ErrorType
-from .apps.aelf_cmd_builder import SystemInstructionTransfer, SystemInstructionGetTxResult, MessageTransfer, MessageTxResult, verify_signature
+from .apps.aelf_cmd_builder import verify_signature
 from .apps.aelf_utils import FOREIGN_PUBLIC_KEY, FOREIGN_PUBLIC_KEY_2, CHAIN_PUBLIC_KEY, AMOUNT, AMOUNT_2, TICKER, REF_BLOCK_NUMBER, METHOD_NAME, ELF_PACKED_DERIVATION_PATH, ELF_PACKED_DERIVATION_PATH_2
 
 from .utils import ROOT_SCREENSHOT_PATH

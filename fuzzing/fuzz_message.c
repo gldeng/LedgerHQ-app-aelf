@@ -1,6 +1,6 @@
-#include "sol/message.h"
-#include "sol/parser.h"
-#include "sol/transaction_summary.h"
+#include "aelf/message.h"
+#include "aelf/parser.h"
+#include "aelf/transaction_summary.h"
 
 int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     Parser parser = {Data, Size};

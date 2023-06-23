@@ -1,7 +1,7 @@
 #include "common_byte_strings.h"
 #include "message.c"
-#include "sol/parser.h"
-#include "sol/transaction_summary.h"
+#include "aelf/parser.h"
+#include "aelf/transaction_summary.h"
 #include "util.h"
 #include <assert.h>
 #include <stdio.h>

@@ -1,6 +1,6 @@
 #include "instruction.h"
-#include "sol/parser.h"
-#include "sol/transaction_summary.h"
+#include "aelf/parser.h"
+#include "aelf/transaction_summary.h"
 #include "util.h"
 #include <string.h>
 
