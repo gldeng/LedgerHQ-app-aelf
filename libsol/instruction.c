@@ -45,7 +45,6 @@ static int parseParams(Parser* parser, SystemTransferInfo* info) {
                 }
                 break;
             default:
-                PRINTF("Unknown field number %d\n", field_number);
                 return 1;
         }
     }
@@ -103,7 +102,6 @@ int parse_system_transfer_instruction(Parser* parser, SystemTransferInfo* info) 
                 }
                 break;
             default:
-                PRINTF("Unknown field number %d\n", field_number);
                 return 1;
         }
     }

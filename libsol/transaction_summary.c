@@ -133,7 +133,8 @@ int transaction_summary_set_fee_payer_pubkey(const Pubkey* pubkey) {
     return 0;
 }
 
-static int transaction_summary_update_display_for_item(const SummaryItem* item) {
+static int transaction_summary_update_display_for_item(const SummaryItem* item,
+                                                       enum DisplayFlags flags) {
     switch (item->kind) {
         case SummaryItemNone:
             return 1;
@@ -231,7 +232,7 @@ int transaction_summary_display_item(size_t item_index, enum DisplayFlags flags)
         return 1;
     }
 
-    return transaction_summary_update_display_for_item(item);
+    return transaction_summary_update_display_for_item(item, flags);
 }
 
 #define SET_IF_USED(item, item_kinds, index) \
