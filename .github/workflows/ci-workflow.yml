@@ -78,7 +78,7 @@ jobs:
         run: |
           pip install --extra-index-url https://test.pypi.org/simple/ -r tests/python/requirements.txt
       - name: Run tests
-        run: pytest tests/python/ -v --tb=short --device all --golden_run
+        run: pytest tests/python/ -v --tb=short --device all
   
   # TODO: To be reactivated after adding the dependencies in the Makefile
   # job_C_test:
