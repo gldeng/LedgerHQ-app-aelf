@@ -6,7 +6,7 @@
 #include "apdu.h"
 
 // Function to compare two strings
-static inline int is_equal_string(const SizedString* string1,const char* string2) {
+static inline int is_equal_string(const SizedString* string1, const char* string2) {
     const char* array = string2;
     const char* str = string1->string;
 
@@ -16,7 +16,7 @@ static inline int is_equal_string(const SizedString* string1,const char* string2
             return 1;  // Not equal
         }
         array++;  // Move to the next character in array
-        str++;  // Move to the next character in the string
+        str++;    // Move to the next character in the string
     }
 
     return 0;
@@ -48,7 +48,7 @@ static int parseParams(Parser* parser, SystemTransferInfo* info) {
                 {
                     readVarInt(parser, &info->ticker.length);
                     BAIL_IF(parse_sized_string(parser, &info->ticker));
-                    if(is_equal_string(&info->ticker, TICKER_ELF)) {
+                    if (is_equal_string(&info->ticker, TICKER_ELF)) {
                         THROW(ApduReplyAelfWrongTicker);
                     }
                     index++;
@@ -100,7 +100,7 @@ int parse_system_transfer_instruction(Parser* parser, SystemTransferInfo* info) 
                     BAIL_IF(parse_pubkey(parser, &info->to));
 
                     const Pubkey sm_address = SMART_CONTRACT_ADDRESS;
-                    if(!pubkeys_equal(info->to, &sm_address)) {
+                    if (!pubkeys_equal(info->to, &sm_address)) {
                         THROW(ApduReplyAelfWrongSmartContractAddress);
                     }
                 }
@@ -121,7 +121,7 @@ int parse_system_transfer_instruction(Parser* parser, SystemTransferInfo* info) 
                 {
                     readVarInt(parser, &info->method_name.length);
                     BAIL_IF(parse_sized_string(parser, &info->method_name));
-                    if(is_equal_string(&info->method_name, TRANSFER_METHOD_NAME)) {
+                    if (is_equal_string(&info->method_name, TRANSFER_METHOD_NAME)) {
                         THROW(ApduReplyAelfWrongMethodName);
                     }
                 }
