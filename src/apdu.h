@@ -45,7 +45,7 @@ typedef enum ApduReply {
     ApduReplyAelfInvalidMessageSize = 0x6a83,
     ApduReplyAelfSummaryFinalizeFailed = 0x6f00,
     ApduReplyAelfSummaryUpdateFailed = 0x6f01,
-    
+
     ApduReplyAelfFieldNumberUnknown = 0x6f02,
     ApduReplyAelfWrongTicker = 0x6f03,
     ApduReplyAelfWrongMethodName = 0x6f04,
