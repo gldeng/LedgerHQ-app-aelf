@@ -15,8 +15,8 @@ jobs:
         sdk:
         - path: $NANOS_SDK
           name: nanos
-        - path: $NANOX_SDK
-          name: nanox
+        # - path: $NANOX_SDK
+        #   name: nanox
         - path: $NANOSP_SDK
           name: nanosp
 
