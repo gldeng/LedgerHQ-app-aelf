@@ -3,6 +3,28 @@
 #include "aelf/transaction_summary.h"
 #include "util.h"
 #include <string.h>
+#include "apdu.h"
+
+// Function to compare two strings
+static inline int is_equal_string(const SizedString* string1,const char* string2) {
+    const char* array = string2;
+    const char* str = string1->string;
+
+    // Iterate through the string and compare with array
+    while (*array != '\0' && *str != '\0') {
+        if (*array != *str) {
+            return 1;  // Not equal
+        }
+        array++;  // Move to the next character in array
+        str++;  // Move to the next character in the string
+    }
+
+    return 0;
+}
+
+static inline bool pubkeys_equal(const Pubkey* pubkey1, const Pubkey* pubkey2) {
+    return memcmp(pubkey1, pubkey2, PUBKEY_SIZE) == 0;
+}
 
 static int parseParams(Parser* parser, SystemTransferInfo* info) {
     uint8_t index = 0;
@@ -26,6 +48,9 @@ static int parseParams(Parser* parser, SystemTransferInfo* info) {
                 {
                     readVarInt(parser, &info->ticker.length);
                     BAIL_IF(parse_sized_string(parser, &info->ticker));
+                    if(is_equal_string(&info->ticker, TICKER_ELF)) {
+                        THROW(ApduReplyAelfWrongTicker);
+                    }
                     index++;
                 }
                 break;
@@ -73,6 +98,11 @@ int parse_system_transfer_instruction(Parser* parser, SystemTransferInfo* info) 
                     uint64_t length;
                     readVarInt(parser, &length);
                     BAIL_IF(parse_pubkey(parser, &info->to));
+
+                    const Pubkey sm_address = SMART_CONTRACT_ADDRESS;
+                    if(!pubkeys_equal(info->to, &sm_address)) {
+                        THROW(ApduReplyAelfWrongSmartContractAddress);
+                    }
                 }
                 break;
             case 3:
@@ -91,6 +121,9 @@ int parse_system_transfer_instruction(Parser* parser, SystemTransferInfo* info) 
                 {
                     readVarInt(parser, &info->method_name.length);
                     BAIL_IF(parse_sized_string(parser, &info->method_name));
+                    if(is_equal_string(&info->method_name, TRANSFER_METHOD_NAME)) {
+                        THROW(ApduReplyAelfWrongMethodName);
+                    }
                 }
                 break;
             case 6:
