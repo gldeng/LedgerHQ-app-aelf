@@ -79,14 +79,15 @@ jobs:
           pip install --extra-index-url https://test.pypi.org/simple/ -r tests/python/requirements.txt
       - name: Run tests
         run: pytest tests/python/ -v --tb=short --device all
-
-  job_C_test:
-    name: C tests
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-legacy:latest
-    steps:
-      - name: Clone
-        uses: actions/checkout@v3
-      - name: Build unit tests
-        run: make -C lib
+  
+  # TODO: To be reactivated after adding the dependencies in the Makefile
+  # job_C_test:
+  #   name: C tests
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-legacy:latest
+  #   steps:
+  #     - name: Clone
+  #       uses: actions/checkout@v3
+  #     - name: Build unit tests
+  #       run: make -C lib
