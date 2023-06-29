@@ -3,7 +3,7 @@
 #include "aelf/transaction_summary.h"
 #include "util.h"
 #include <string.h>
-#include "apdu.h"
+#include "../src/adpu.h"
 
 // Function to compare two strings
 static inline int is_equal_string(const SizedString* string1, const char* string2) {
