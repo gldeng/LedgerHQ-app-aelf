@@ -1,0 +1,16 @@
+name = "Aelf"
+version = "1.0.0"
+
+[0x31100004] #NanoS
+icon = "icons/nanos_app_aelf.gif"
+flags = "0x000"
+derivationPath = {curves = ["secp256k1"]}
+binary = "bin/app.hex"
+dataSize = 64
+
+[0x33100004] #NanoSP
+icon = "icons/nanosp_app_aelf.gif"
+flags = "0x000"
+derivationPath = {curves = ["secp256k1"]}
+binary = "bin/app_nanosp.hex"
+dataSize = 64
