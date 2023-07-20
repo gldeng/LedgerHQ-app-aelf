@@ -8,6 +8,29 @@ from .apps.aelf_utils import FOREIGN_PUBLIC_KEY, FOREIGN_PUBLIC_KEY_2, CHAIN_PUB
 
 from .utils import ROOT_SCREENSHOT_PATH
 
+def test_aelf_get_public_key_ok(backend, navigator, test_name):
+    aelf = AelfClient(backend)
+    from_public_key = aelf.get_public_key(ELF_PACKED_DERIVATION_PATH_2)
+
+    with aelf.send_public_key_with_confirm(ELF_PACKED_DERIVATION_PATH_2):
+        if backend.firmware.device.startswith("nano"):
+            navigator.navigate_until_text_and_compare(NavInsID.RIGHT_CLICK,
+                                                        [NavInsID.BOTH_CLICK],
+                                                        "Approve",
+                                                        ROOT_SCREENSHOT_PATH,
+                                                        test_name)
+        else:
+            instructions = [
+                NavInsID.USE_CASE_REVIEW_TAP,
+                NavInsID.USE_CASE_ADDRESS_CONFIRMATION_CONFIRM,
+                NavInsID.USE_CASE_STATUS_DISMISS
+            ]
+            navigator.navigate_and_compare(ROOT_SCREENSHOT_PATH,
+                                            test_name,
+                                            instructions)
+
+    assert aelf.get_async_response().data == from_public_key
+
 def test_aelf_simple_transfer_txn_ok(backend, navigator, test_name):
     aelf = AelfClient(backend)
     from_public_key = aelf.get_public_key(ELF_PACKED_DERIVATION_PATH_2)

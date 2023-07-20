@@ -2,15 +2,16 @@ from typing import List
 from enum import IntEnum
 import base58
 from nacl.signing import VerifyKey
+from aelf import AElf
 
-# Fake blockhash so this example doesn't need a network connection. It should be queried from the cluster in normal use.
-FAKE_RECENT_BLOCKHASH = "11111111111111111111111111111111"
+ADDRESS = "QJLtV46v7U88JaRJb3YeTYAum9v4CaYQQ7yWUtqVa7bRW23Xx"
 
 
 def verify_signature(from_public_key: bytes, message: bytes, signature: bytes):
     assert len(signature) == 64, "signature size incorrect"
-    verify_key = VerifyKey(from_public_key)
-    verify_key.verify(message, signature)
+    aelf = AElf("http://18.163.40.216:8000")
+    address = aelf.get_address_string_from_public_key(from_public_key)
+    assert ADDRESS == address
 
 
 class SystemInstruction(IntEnum):
