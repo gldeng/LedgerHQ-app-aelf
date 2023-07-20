@@ -15,20 +15,19 @@
 static uint8_t set_result_sign_message() {
     uint8_t signature[SIGNATURE_LENGTH];
     cx_ecfp_private_key_t privateKey;
+    size_t sig_len = SIGNATURE_LENGTH;
     BEGIN_TRY {
         TRY {
-            get_private_key_with_seed(&privateKey,
-                                      G_command.derivation_path,
-                                      G_command.derivation_path_length);
-            cx_eddsa_sign(&privateKey,
-                          CX_LAST,
-                          CX_SHA512,
+            get_private_key(&privateKey,
+                            G_command.derivation_path,
+                            G_command.derivation_path_length);
+            cx_ecdsa_sign_no_throw(&privateKey,
+                          CX_RND_RFC6979 | CX_LAST,
+                          CX_SHA256,
                           G_command.message,
                           G_command.message_length,
-                          NULL,
-                          0,
                           signature,
-                          SIGNATURE_LENGTH,
+                          &sig_len,
                           NULL);
             memcpy(G_io_apdu_buffer, signature, SIGNATURE_LENGTH);
         }

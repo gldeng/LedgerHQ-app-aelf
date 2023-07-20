@@ -36,3 +36,5 @@ int print_summary(const char *in,
 int print_timestamp(int64_t, char *out, size_t out_length);
 
 int encode_base58(const void *in, size_t length, char *out, size_t maxoutlen);
+
+int encode_base58_check(const void *in, size_t length, char *out, size_t maxoutlen);

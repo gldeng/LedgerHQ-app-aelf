@@ -156,7 +156,7 @@ static int transaction_summary_update_display_for_item(const SummaryItem* item,
             break;
         case SummaryItemPubkey: {
             char tmp_buf[BASE58_PUBKEY_LENGTH];
-            BAIL_IF(encode_base58(item->pubkey, PUBKEY_SIZE, tmp_buf, sizeof(tmp_buf)));
+            BAIL_IF(encode_base58_check(item->pubkey, PUBKEY_SIZE, tmp_buf, sizeof(tmp_buf)));
             if (flags & DisplayFlagLongPubkeys) {
                 BAIL_IF(print_string(tmp_buf, G_transaction_summary_text, TEXT_BUFFER_LENGTH));
             } else {
