@@ -29,6 +29,7 @@ def pytest_addoption(parser):
     parser.addoption("--display", action="store_true", default=False)
     parser.addoption("--golden_run", action="store_true", default=False)
     parser.addoption("--log_apdu_file", action="store", default=None)
+    parser.addoption("--seed", action="store", default="mind palm gallery soldier flame biology lion retreat depart sponsor shove fringe inflict conduct extra ladder weapon dinner modify jeans display eternal mercy detail")
 
 
 @pytest.fixture(scope="session")
@@ -51,6 +52,9 @@ def log_apdu_file(pytestconfig):
     filename = pytestconfig.getoption("log_apdu_file")
     return Path(filename).resolve() if filename is not None else None
 
+@pytest.fixture(scope="session")
+def cli_user_seed(pytestconfig):
+    return pytestconfig.getoption("seed")
 
 @pytest.fixture
 def test_name(request):
@@ -91,11 +95,14 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
 
 
-def prepare_speculos_args(firmware: Firmware, display: bool):
+def prepare_speculos_args(firmware: Firmware, display: bool, cli_user_seed: str):
     speculos_args = []
 
     if display:
         speculos_args += ["--display", "qt"]
+
+    if cli_user_seed:
+        speculos_args += ["--seed", cli_user_seed]
 
     app_path = app_path_from_app_name(APPS_DIRECTORY, APP_NAME, firmware.device)
 
@@ -105,13 +112,13 @@ def prepare_speculos_args(firmware: Firmware, display: bool):
 # Depending on the "--backend" option value, a different backend is
 # instantiated, and the tests will either run on Speculos or on a physical
 # device depending on the backend
-def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apdu_file: Optional[Path]):
+def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apdu_file: Optional[Path], cli_user_seed: str):
     if backend_name.lower() == "ledgercomm":
         return LedgerCommBackend(firmware=firmware, interface="hid", log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "ledgerwallet":
         return LedgerWalletBackend(firmware=firmware, log_apdu_file=log_apdu_file)
     elif backend_name.lower() == "speculos":
-        args, kwargs = prepare_speculos_args(firmware, display)
+        args, kwargs = prepare_speculos_args(firmware, display, cli_user_seed)
         return SpeculosBackend(*args, firmware=firmware, log_apdu_file=log_apdu_file, **kwargs)
     else:
         raise ValueError(f"Backend '{backend_name}' is unknown. Valid backends are: {BACKENDS}")
@@ -124,8 +131,8 @@ def create_backend(backend_name: str, firmware: Firmware, display: bool, log_apd
 # function, class, module or session.
 # @pytest.fixture(scope="session")
 @pytest.fixture(scope="function")
-def backend(backend_name, firmware, display, log_apdu_file):
-    with create_backend(backend_name, firmware, display, log_apdu_file) as b:
+def backend(backend_name, firmware, display, log_apdu_file, cli_user_seed):
+    with create_backend(backend_name, firmware, display, log_apdu_file, cli_user_seed) as b:
         yield b
 
 
