@@ -185,7 +185,7 @@ int encode_base58_check(const void *in, size_t length, char *out, size_t maxoutl
     uint8_t buf[PUBKEY_SIZE + 4];
     memcpy(&buf, in, length);
     memcpy(&buf[length], checksum2, 4);
-    
+
     return encode_base58(buf, length + 4, out, maxoutlen);
 }
 

@@ -1,2 +1,3 @@
 base58
 ragger[tests,speculos]
+aelf-sdk
