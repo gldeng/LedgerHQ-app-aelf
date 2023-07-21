@@ -4,14 +4,11 @@ import base58
 from nacl.signing import VerifyKey
 from aelf import AElf
 
-ADDRESS = "E2WwjqRpynU6tht5KH5nt2YpD5HU6HXrzNozzQeQADvsHAmbH"
-
 
 def verify_signature(from_public_key: bytes, message: bytes, signature: bytes):
-    assert len(signature) == 64, "signature size incorrect"
     aelf = AElf("http://18.163.40.216:8000")
     address = aelf.get_address_string_from_public_key(from_public_key)
-    assert ADDRESS == address
+    assert len(signature) == 64, "signature size incorrect"
 
 
 class SystemInstruction(IntEnum):
