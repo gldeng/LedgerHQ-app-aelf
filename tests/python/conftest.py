@@ -18,10 +18,12 @@ BACKENDS = ["speculos", "ledgercomm", "ledgerwallet"]
 
 DEVICES = ["nanos", "nanox", "nanosp", "all"]
 
-FIRMWARES = [Firmware('nanos', '2.1'),
-             Firmware('nanox', '2.0.2'),
-             Firmware('nanosp', '1.0.3')]
-
+FIRMWARES = [
+    Firmware.NANOS,
+    Firmware.NANOSP,
+    Firmware.NANOX,
+    Firmware.STAX,
+]
 
 def pytest_addoption(parser):
     parser.addoption("--device", choices=DEVICES, required=True)
@@ -76,23 +78,17 @@ def pytest_generate_tests(metafunc):
         device = metafunc.config.getoption("device")
         backend_name = metafunc.config.getoption("backend")
 
-        if device == "all":
-            if backend_name != "speculos":
-                raise ValueError("Invalid device parameter on this backend")
-
-            # Add all supported firmwares
-            for fw in FIRMWARES:
+        # Enable firmware for requested devices
+        for fw in FIRMWARES:
+            if device == fw.name or device == "all" or (device == "all_nano" and fw.is_nano):
                 fw_list.append(fw)
-                ids.append(fw.device + " " + fw.version)
+                ids.append(fw.name)
 
-        else:
-            # Enable firmware for demanded device
-            for fw in FIRMWARES:
-                if device == fw.device:
-                    fw_list.append(fw)
-                    ids.append(fw.device + " " + fw.version)
+        if len(fw_list) > 1 and backend_name != "speculos":
+            raise ValueError("Invalid device parameter on this backend")
 
         metafunc.parametrize("firmware", fw_list, ids=ids, scope="session")
+
 
 
 def prepare_speculos_args(firmware: Firmware, display: bool, cli_user_seed: str):

@@ -182,11 +182,11 @@ int encode_base58_check(const void *in, size_t length, char *out, size_t maxoutl
     cx_hash_sha256(in, length, checksum, CX_SHA256_SIZE);
     cx_hash_sha256(checksum, CX_SHA256_SIZE, checksum2, CX_SHA256_SIZE);
 
-    uint8_t buf[PUBKEY_SIZE+4];
+    uint8_t buf[PUBKEY_SIZE + 4];
     memcpy(&buf, in, length);
     memcpy(&buf[length], checksum2, 4);
     
-    return encode_base58(buf, length+4, out, maxoutlen);
+    return encode_base58(buf, length + 4, out, maxoutlen);
 }
 
 int print_i64(int64_t i64, char *out, size_t out_length) {
