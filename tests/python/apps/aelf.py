@@ -20,7 +20,7 @@ P2_NONE = 0x00
 P2_EXTEND = 0x01
 P2_MORE = 0x02
 
-PUBLIC_KEY_LENGTH = 32
+PUBLIC_KEY_LENGTH = 33
 
 MAX_CHUNK_SIZE = 255
 
@@ -94,7 +94,13 @@ class AelfClient:
         for m in messages[1:]:
             self._client.exchange(CLA, INS.INS_SIGN_TRANSFER, p1, P2_MORE | P2_EXTEND, m)
 
-
+    @contextmanager
+    def send_public_key_with_confirm(self, derivation_path: bytes) -> bytes:
+        with self._client.exchange_async(CLA, INS.INS_GET_PUBKEY,
+                                         P1_CONFIRM, P2_NONE,
+                                         derivation_path):
+            yield
+    
     @contextmanager
     def send_async_sign_transfer(self,
                                 derivation_path : bytes,

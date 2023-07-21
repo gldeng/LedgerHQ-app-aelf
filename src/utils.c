@@ -12,7 +12,7 @@ void get_public_key(uint8_t *publicKeyArray, const uint32_t *derivationPath, siz
     get_private_key(&privateKey, derivationPath, pathLength);
     BEGIN_TRY {
         TRY {
-            cx_ecfp_generate_pair(CX_CURVE_Ed25519, &publicKey, &privateKey, 1);
+            cx_ecfp_generate_pair2_no_throw(CX_CURVE_256K1, &publicKey, &privateKey, 1, CX_SHA256);
         }
         CATCH_OTHER(e) {
             MEMCLEAR(privateKey);
@@ -42,18 +42,15 @@ void get_private_key(cx_ecfp_private_key_t *privateKey,
     uint8_t privateKeyData[PRIVATEKEY_LENGTH];
     BEGIN_TRY {
         TRY {
-            os_perso_derive_node_bip32_seed_key(HDW_ED25519_SLIP10,
-                                                CX_CURVE_Ed25519,
-                                                derivationPath,
-                                                pathLength,
-                                                privateKeyData,
-                                                NULL,
-                                                NULL,
-                                                0);
-            cx_ecfp_init_private_key(CX_CURVE_Ed25519,
+            os_derive_bip32_no_throw(CX_CURVE_256K1,
+                                     derivationPath,
+                                     pathLength,
                                      privateKeyData,
-                                     PRIVATEKEY_LENGTH,
-                                     privateKey);
+                                     NULL);
+            cx_ecfp_init_private_key_no_throw(CX_CURVE_256K1,
+                                              privateKeyData,
+                                              PRIVATEKEY_LENGTH,
+                                              privateKey);
         }
         CATCH_OTHER(e) {
             MEMCLEAR(privateKeyData);
@@ -72,18 +69,15 @@ void get_private_key_with_seed(cx_ecfp_private_key_t *privateKey,
     uint8_t privateKeyData[PRIVATEKEY_LENGTH];
     BEGIN_TRY {
         TRY {
-            os_perso_derive_node_bip32_seed_key(HDW_ED25519_SLIP10,
-                                                CX_CURVE_Ed25519,
-                                                derivationPath,
-                                                pathLength,
-                                                privateKeyData,
-                                                NULL,
-                                                (unsigned char *) "ed25519 seed",
-                                                12);
-            cx_ecfp_init_private_key(CX_CURVE_Ed25519,
+            os_derive_bip32_no_throw(CX_CURVE_256K1,
+                                     derivationPath,
+                                     pathLength,
                                      privateKeyData,
-                                     PRIVATEKEY_LENGTH,
-                                     privateKey);
+                                     NULL);
+            cx_ecfp_init_private_key_no_throw(CX_CURVE_256K1,
+                                              privateKeyData,
+                                              PRIVATEKEY_LENGTH,
+                                              privateKey);
         }
         CATCH_OTHER(e) {
             MEMCLEAR(privateKeyData);

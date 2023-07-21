@@ -4,10 +4,11 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define SUMMARY_LENGTH       7
-#define TITLE_SIZE           32
-#define BASE58_PUBKEY_LENGTH 45
-#define BASE58_PUBKEY_SHORT  (SUMMARY_LENGTH + 2 + SUMMARY_LENGTH + 1)
+#define SUMMARY_LENGTH             7
+#define TITLE_SIZE                 32
+#define BASE58_PUBKEY_LENGTH       45
+#define BASE58_CHECK_PUBKEY_LENGTH 49
+#define BASE58_PUBKEY_SHORT        (SUMMARY_LENGTH + 2 + SUMMARY_LENGTH + 1)
 
 int print_token_amount(uint64_t amount,
                        const char *asset,
@@ -36,3 +37,5 @@ int print_summary(const char *in,
 int print_timestamp(int64_t, char *out, size_t out_length);
 
 int encode_base58(const void *in, size_t length, char *out, size_t maxoutlen);
+
+int encode_base58_check(const void *in, size_t length, char *out, size_t maxoutlen);
