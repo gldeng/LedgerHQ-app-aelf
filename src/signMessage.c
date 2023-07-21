@@ -22,13 +22,13 @@ static uint8_t set_result_sign_message() {
                             G_command.derivation_path,
                             G_command.derivation_path_length);
             cx_ecdsa_sign_no_throw(&privateKey,
-                          CX_RND_RFC6979 | CX_LAST,
-                          CX_SHA256,
-                          G_command.message,
-                          G_command.message_length,
-                          signature,
-                          &sig_len,
-                          NULL);
+                                   CX_RND_RFC6979 | CX_LAST,
+                                   CX_SHA256,
+                                   G_command.message,
+                                   G_command.message_length,
+                                   signature,
+                                   &sig_len,
+                                   NULL);
             memcpy(G_io_apdu_buffer, signature, SIGNATURE_LENGTH);
         }
         CATCH_OTHER(e) {

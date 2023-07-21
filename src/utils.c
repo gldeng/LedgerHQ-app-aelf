@@ -12,7 +12,7 @@ void get_public_key(uint8_t *publicKeyArray, const uint32_t *derivationPath, siz
     get_private_key(&privateKey, derivationPath, pathLength);
     BEGIN_TRY {
         TRY {
-            cx_ecfp_generate_pair_no_throw(CX_CURVE_256K1, &publicKey, &privateKey, 1);
+            cx_ecfp_generate_pair2_no_throw(CX_CURVE_256K1, &publicKey, &privateKey, 1, CX_SHA256);
         }
         CATCH_OTHER(e) {
             MEMCLEAR(privateKey);

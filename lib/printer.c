@@ -170,7 +170,6 @@ int encode_base58(const void *in, size_t length, char *out, size_t maxoutlen) {
     while (zero_count-- > 0) {
         buffer[--j] = BASE58_ALPHABET[0];
     }
-    length = 2 * length - j;
     memmove(out, (buffer + j), maxoutlen);
     out[maxoutlen] = '\0';
     return 0;

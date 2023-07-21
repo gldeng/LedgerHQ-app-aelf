@@ -4,7 +4,7 @@ import base58
 from nacl.signing import VerifyKey
 from aelf import AElf
 
-ADDRESS = "QJLtV46v7U88JaRJb3YeTYAum9v4CaYQQ7yWUtqVa7bRW23Xx"
+ADDRESS = "E2WwjqRpynU6tht5KH5nt2YpD5HU6HXrzNozzQeQADvsHAmbH"
 
 
 def verify_signature(from_public_key: bytes, message: bytes, signature: bytes):
