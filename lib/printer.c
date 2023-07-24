@@ -4,6 +4,7 @@
 #include "rfc3339.h"
 #include "aelf/printer.h"
 #include "util.h"
+#include "cx.h"
 
 // max amount is max uint64 scaled down: "18446744073.709551615"
 #define AMOUNT_MAX_SIZE 22
@@ -136,7 +137,7 @@ static const char BASE58_ALPHABET[] = {'1', '2', '3', '4', '5', '6', '7', '8', '
 
 int encode_base58(const void *in, size_t length, char *out, size_t maxoutlen) {
     uint8_t tmp[64];
-    uint8_t buffer[64];
+    uint8_t buffer[72];
     uint8_t j;
     size_t start_at;
     size_t zero_count = 0;
@@ -169,13 +170,23 @@ int encode_base58(const void *in, size_t length, char *out, size_t maxoutlen) {
     while (zero_count-- > 0) {
         buffer[--j] = BASE58_ALPHABET[0];
     }
-    length = 2 * length - j;
-    if (maxoutlen < length + 1) {
-        return EXCEPTION_OVERFLOW;
-    }
-    memmove(out, (buffer + j), length);
-    out[length] = '\0';
+    memmove(out, (buffer + j), maxoutlen);
+    out[maxoutlen] = '\0';
     return 0;
+}
+
+int encode_base58_check(const void *in, size_t length, char *out, size_t maxoutlen) {
+    uint8_t checksum[CX_SHA256_SIZE];
+    uint8_t checksum2[CX_SHA256_SIZE];
+
+    cx_hash_sha256(in, length, checksum, CX_SHA256_SIZE);
+    cx_hash_sha256(checksum, CX_SHA256_SIZE, checksum2, CX_SHA256_SIZE);
+
+    uint8_t buf[PUBKEY_SIZE + 4];
+    memcpy(&buf, in, length);
+    memcpy(&buf[length], checksum2, 4);
+
+    return encode_base58(buf, length + 4, out, maxoutlen);
 }
 
 int print_i64(int64_t i64, char *out, size_t out_length) {

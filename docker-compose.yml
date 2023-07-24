@@ -9,6 +9,7 @@ services:
       - ./src:/speculos/src1
       - ./lib:/speculos/src2
       - ./proto:/speculos/src3
+      - ../nanos_secure_sdk:/speculos/src4
 
     ports:
       - "1234:1234" # gdb
@@ -16,7 +17,7 @@ services:
       - "40000:40000" # apdu
 
     environment:
-      - GDB_DIRECTORY_LIST="/speculos/src1:/speculos/src2:/speculos/src3"
+      - GDB_DIRECTORY_LIST="/speculos/src1:/speculos/src2:/speculos/src3:/speculos/src4"
 
     command: "--model nanos apps/app.elf --display headless --apdu-port 40000 -d"
     # Add `--vnc-password "<password>"` for macos users to use built-in vnc client.
