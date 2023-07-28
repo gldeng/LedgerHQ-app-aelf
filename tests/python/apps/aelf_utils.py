@@ -45,7 +45,7 @@ CHAIN_PUBLIC_KEY    = base58.b58decode_check(OWNED_ADDRESS)
 ### Proposed AELF derivation paths for tests ###
 
 ELF_PACKED_DERIVATION_PATH      = pack_derivation_path("m/44'/1616'/12345'")
-ELF_PACKED_DERIVATION_PATH_2    = pack_derivation_path("m/44'/1616'/0'/0'")
+ELF_PACKED_DERIVATION_PATH_2    = pack_derivation_path("m/44'/1616'/0'/0/0")
 
 ### Transaction info
 
