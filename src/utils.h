@@ -64,6 +64,7 @@ int read_derivation_path(const uint8_t *data_buffer,
                          uint32_t *derivation_path_length);
 
 void sendResponse(uint8_t tx, bool approve);
+void format_signature_out(const uint8_t *signature, unsigned int info);
 
 // type            userid    x    y   w    h  str rad fill      fg        bg      fid iid  txt
 // touchparams...       ]
