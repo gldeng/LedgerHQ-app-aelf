@@ -141,3 +141,28 @@ unsigned int ui_prepro(const bagl_element_t *element) {
     }
     return display;
 }
+
+void format_signature_out(const uint8_t *signature, unsigned int info) {
+    memset(G_io_apdu_buffer, 0x00, 65);
+    uint8_t offset = 0;
+    uint8_t xoffset = 4;  // point to r value
+    // copy r
+    uint8_t xlength = signature[xoffset - 1];
+    if (xlength == 33) {
+        xlength = 32;
+        xoffset++;
+    }
+    memmove(G_io_apdu_buffer + offset + 32 - xlength, signature + xoffset, xlength);
+    offset += 32;
+    xoffset += xlength + 2;  // move over rvalue and TagLEn
+    // copy s value
+    xlength = signature[xoffset - 1];
+    if (xlength == 33) {
+        xlength = 32;
+        xoffset++;
+    }
+    memmove(G_io_apdu_buffer + offset + 32 - xlength, signature + xoffset, xlength);
+    if (info & CX_ECCINFO_PARITY_ODD) {
+        G_io_apdu_buffer[64] = 1;
+    }
+}
