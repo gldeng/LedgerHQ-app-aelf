@@ -25,10 +25,7 @@ void get_public_key(uint8_t *publicKeyArray, const uint32_t *derivationPath, siz
     END_TRY;
 
     for (int i = 0; i < PUBKEY_LENGTH; i++) {
-        publicKeyArray[i] = publicKey.W[PUBKEY_LENGTH + PRIVATEKEY_LENGTH - i];
-    }
-    if ((publicKey.W[PUBKEY_LENGTH] & 1) != 0) {
-        publicKeyArray[PUBKEY_LENGTH - 1] |= 0x80;
+        publicKeyArray[i] = publicKey.W[i];
     }
 }
 
