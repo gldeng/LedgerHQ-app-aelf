@@ -53,7 +53,7 @@ void handle_get_pubkey(volatile unsigned int *flags, volatile unsigned int *tx) 
     }
 
     get_public_key(G_publicKey, G_command.derivation_path, G_command.derivation_path_length);
-    print_pubkey(G_publicKey,G_publicKeyStr,PUBKEY_LENGTH);
+    print_pubkey(G_publicKey, G_publicKeyStr, PUBKEY_LENGTH);
 
     if (G_command.non_confirm) {
         *tx = set_result_get_pubkey();
