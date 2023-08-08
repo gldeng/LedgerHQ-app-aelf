@@ -2,7 +2,6 @@ from typing import List
 from enum import IntEnum
 import base58
 from nacl.signing import VerifyKey
-from aelf import AElf
 
 def verify_signature(from_public_key: bytes, message: bytes, signature: bytes):
     assert len(signature) == 65, "signature doesn't have the correct size"
