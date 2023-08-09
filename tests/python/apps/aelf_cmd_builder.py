@@ -2,14 +2,16 @@ from typing import List
 from enum import IntEnum
 import base58
 from nacl.signing import VerifyKey
-from aelf import AElf
-
 
 def verify_signature(from_public_key: bytes, message: bytes, signature: bytes):
-    aelf = AElf("http://18.163.40.216:8000")
-    address = aelf.get_address_string_from_public_key(from_public_key)
-    assert len(signature) == 64, "signature size incorrect"
-
+    assert len(signature) == 65, "signature doesn't have the correct size"
+    import eth_keys
+    from hashlib import sha256
+    api = eth_keys.KeyAPI()
+    sig = api.Signature(signature)
+    msg_hash = sha256(message).digest()
+    recovered = sig.recover_public_key_from_msg_hash(msg_hash)
+    assert recovered[:32] == from_public_key[1:33], "recovered public key doesn't match the given public key"
 
 class SystemInstruction(IntEnum):
     CreateAccount           = 0x00
