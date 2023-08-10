@@ -1,4 +1,3 @@
 base58
 ragger[tests,speculos]
-aelf-sdk
-protobuf==3.19.0
+eth_keys
