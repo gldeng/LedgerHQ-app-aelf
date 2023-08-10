@@ -97,15 +97,17 @@ int print_string(const char *in, char *out, size_t out_length) {
     return rc;
 }
 
-int print_pubkey(const Pubkey *pubkey, char *out, size_t out_length) {
+int print_pubkey(const uint8_t *in, char *out, size_t out_length) {
     const char hexDigits[] = "0123456789ABCDEF";
+    char buffer[130];
 
     for (size_t i = 0; i < out_length; i++) {
-        out[i * 2] = hexDigits[pubkey->data[i] >> 4];
-        out[i * 2 + 1] = hexDigits[pubkey->data[i] & 0x0F];
+        buffer[i * 2] = hexDigits[in[i] >> 4];
+        buffer[i * 2 + 1] = hexDigits[in[i] & 0x0F];
     }
 
-    out[PUBKEY_SIZE * 2] = '\0';  // Null-terminate the string
+    memmove(out, buffer, 130);
+    out[out_length * 2] = '\0';  // Null-terminate the string
     return 0;
 }
 

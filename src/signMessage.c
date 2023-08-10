@@ -13,23 +13,27 @@
 #include "apdu.h"
 
 static uint8_t set_result_sign_message() {
-    uint8_t signature[SIGNATURE_LENGTH];
+    uint8_t hash[CX_SHA256_SIZE];
+    size_t hash_len = CX_SHA256_SIZE;
+    uint8_t signature[100];
     cx_ecfp_private_key_t privateKey;
-    size_t sig_len = SIGNATURE_LENGTH;
+    size_t sig_len = 100;
+    unsigned int info = 0;
     BEGIN_TRY {
         TRY {
+            cx_hash_sha256(G_command.message, G_command.message_length, hash, hash_len);
             get_private_key(&privateKey,
                             G_command.derivation_path,
                             G_command.derivation_path_length);
             cx_ecdsa_sign_no_throw(&privateKey,
                                    CX_RND_RFC6979 | CX_LAST,
                                    CX_SHA256,
-                                   G_command.message,
-                                   G_command.message_length,
+                                   hash,
+                                   hash_len,
                                    signature,
                                    &sig_len,
-                                   NULL);
-            memcpy(G_io_apdu_buffer, signature, SIGNATURE_LENGTH);
+                                   &info);
+            format_signature_out(signature, info);
         }
         CATCH_OTHER(e) {
             MEMCLEAR(privateKey);
