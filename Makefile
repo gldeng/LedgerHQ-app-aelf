@@ -164,3 +164,4 @@ dep/%.d: %.c Makefile
 
 listvariants:
 	@echo VARIANTS COIN aelf
+# /usr/bin/clang -fcolor-diagnostics -fansi-escape-codes -I./lib/include -I./src -DTEST -g ./lib/instruction.c ./lib/parser.c ./lib/instruction_test.c -o ./lib/instruction_test

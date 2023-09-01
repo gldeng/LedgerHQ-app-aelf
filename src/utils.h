@@ -114,11 +114,6 @@ void format_signature_out(const uint8_t *signature, unsigned int info);
 #endif
 
 #ifdef TEST
-#include <stdio.h>
-#define THROW(code)                \
-    do {                           \
-        printf("error: %d", code); \
-    } while (0)
 #define PRINTF(msg, arg) printf(msg, arg)
 #define PIC(code)        code
 //#define TARGET_NANOS 1
