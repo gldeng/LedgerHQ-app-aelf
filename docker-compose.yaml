@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  nanos:
+    build: .
+    image: ghcr.io/ledgerhq/speculos:sha-1af74ce
+    volumes:
+      - ./build/nanos/bin:/speculos/apps
+    platform: linux/amd64
+    ports:
+      - "1234:1234" # gdb
+      - "5000:5000" # api
+      - "40000:40000" # apdu
+      - "41000:41000" # vnc
+    command: "--model nanos ./apps/app.elf --sdk 2.0 --seed 'mind palm gallery soldier flame biology lion retreat depart sponsor shove fringe inflict conduct extra ladder weapon dinner modify jeans display eternal mercy detail' --display headless --apdu-port 40000"
+    # Add `--vnc-password "<password>"` for macos users to use built-in vnc client.
